@@ -1,0 +1,15 @@
+   KL46, C
+- inicjalizacja I2C
+- inicjalizacja akcelerometru uruchomienie
+- odbieranie danych z akcelerometru
+- wyslanie danych przez uart do kompa
+
+  PYTHON
+- odebranie danych 
+- zapis do notatniku w formie 3 wartosci
+  X    Y    Z
+- przetwrzenie i wizualizacja danych 
+
+dod:
+- rozpoznawanie gestów
+- nadanie gestom akcji 
