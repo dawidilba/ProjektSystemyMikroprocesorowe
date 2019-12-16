@@ -1,8 +1,8 @@
    KL46, C
 - inicjalizacja I2C
 - inicjalizacja akcelerometru uruchomienie
-- odbieranie danych z akcelerometru
-- wyslanie danych przez uart do kompa
+- odbieranie danych z akcelerometru (sprawdzanie za pomoca analizatora stanów logicznych)
+- wyslanie danych przez uart do kompa (weryfikacja przez terminal realterm) 
 
   PYTHON
 - odebranie danych 
