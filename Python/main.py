@@ -54,7 +54,7 @@ class UartCommunication:
             self.x = float(x)
             self.y = float(y)
             self.z = float(z)
-            print(self.x, self.y, self.z)
+            #print(self.x, self.y, self.z)
             if doLogFile == 1:
                 if saveOrAppend == 0:
                     self.saveLogFile()
@@ -71,22 +71,54 @@ class UartCommunication:
         return self.z
 
 
-
 uart = UartCommunication()
 uart.openPort("COM3", 9600) # nazwa portu, predkosc transmisji
+
+plt.style.use('seaborn-bright')
 fig = plt.figure()
-ax = plt.axes(projection='3d')
+ax = fig.add_subplot(211, projection = '3d') # 3d chart
+ax2 = fig.add_subplot(212) # x, y, z depending on time
+ax2.set_ylim(-1000, 1300)
+ax2.set_xlabel("Time (s)")
+ax2.set_ylabel("Amplitudes x,y,z")
+
+
+toc = 0
+xValues, yValues, zValues, timeValues = [], [], [], []
 
 while True:
+    tic = time.time() # time axis tmp
+    timeValues.append(toc)
+
     uart.readPort(1, 0)
     x = uart.getX()
+    xValues.append(x)
     y = uart.getY()
+    yValues.append(y)
     z = uart.getZ()
-    plt.title("Real-Time data from accelerometer") #musi byc ustawiany w petli poniewaz cla() go kasuje
-    ax.scatter3D(x,y,z, c = 'r', marker = 'o')
-    plt.show(block=False) # block zeby dane byly wciaz pobierane
-    plt.pause(1) #czas odswiezania wykresu
-    plt.cla() # clear axes
+    zValues.append(z)
+
+    # x, y, z 3d chart
+    ax.set_title("Real-Time data from accelerometer") #te parametry musza byc ustawiane w petli poniewaz cla() je kasuje
+    ax.set_xlim(-1000, 1000)  # granice osi x
+    ax.set_xlabel('X axis')  # nazwa osi x
+    ax.set_ylim(-1000, 1000)
+    ax.set_ylabel('Y axis')
+    ax.set_zlim(-1000, 1000)
+    ax.set_zlabel('Z axis')
+    ax.scatter3D(x, y, z, c = 'r', marker = '^')
+
+    ## x, y z depending on time chart
+    ax2.set_xlim(left = max(0, toc-5), right = toc)
+    ax2.plot(timeValues, xValues, 'b-',
+             timeValues, yValues, 'g-',
+             timeValues, zValues, 'r-',)
+    plt.show(block=False) # block na false zeby dane byly wciaz wyswietlane na wykresie
+    plt.pause(0.01) #czas odswiezania wykresu
+    ax.cla()    # clear axes
+    toc += time.time()-tic
+
+
 
 
 
