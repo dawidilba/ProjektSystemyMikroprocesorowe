@@ -73,7 +73,7 @@ uart = UartCommunication()
 
 def liveData():
     button1.configure(text="Zamknij wykres", command=closeAll)
-    uart.openPort("COM3", 9600)  # nazwa portu, predkosc transmisji
+    uart.openPort("COM7", 9600)  # nazwa portu, predkosc transmisji
     plt.style.use('seaborn-bright')
     fig = plt.figure(figsize = (9,7.5))
     ax = fig.add_subplot(211, projection='3d')  # 3d chart
@@ -108,7 +108,7 @@ def liveData():
                 timeValues, yValues, 'g-',
                 timeValues, zValues, 'r-',)
         plt.show(block=False) # block na false zeby dane wciaz byly wyswietlane na wykresie
-        plt.pause(0.01) #czas odswiezania wykresu
+        plt.pause(0.000001) #czas odswiezania wykresu
         ax.cla()    # clear axes
         toc += time.time()-tic
 
@@ -155,7 +155,7 @@ def saveGesture():
             ax.set_ylim(-2, 2)
             ax.set_xlabel("Time (s)")
             ax.set_ylabel("Amplitudes x,y,z")
-            ax.set_xlim(left=0, right=3)
+            ax.set_xlim(left=0, right=2)
             toc = 0
             while toc < 3 and uart.isPortOpen() == True:
                 tic = time.time()  # time axis tmp
@@ -174,7 +174,7 @@ def saveGesture():
                         timeValues, yValues, 'g-',
                         timeValues, zValues, 'r-', )
                 plt.show(block = False)
-                plt.pause(0.01)  # czas odswiezania wykresu
+                plt.pause(0.000001)  # czas odswiezania wykresu
                 toc += time.time() - tic
             saveGestureFile(fileName, dataList)
             print("Dodano nowy gest do bazy")
@@ -188,8 +188,8 @@ def saveGesture():
     ax.set_ylim(-2, 2)
     ax.set_xlabel("Time (s)")
     ax.set_ylabel("Amplitudes x,y,z")
-    ax.set_xlim(left=0, right=3)
-    uart.openPort("COM3", 9600)  # nazwa portu, predkosc transmisji
+    ax.set_xlim(left=0, right=2)
+    uart.openPort("COM7", 9600)  # nazwa portu, predkosc transmisji
     axbox = plt.axes([0.20, 0.90, 0.25, 0.05])
     inputBox = TextBox(axbox, 'Nazwa gestu')
     inputBox.on_submit(setFileName)
@@ -274,16 +274,16 @@ def recognizeGesture():
             data = str(x) + " " + str(y) + " " + str(z) + " " + str(toc) + "\n"
             dataList.append(data)
             ## PLOT
-            ax.set_xlim(left = 0, right = 3)
+            ax.set_xlim(left = 0, right = 2)
             ax.plot(timeValues, xValues, 'b-',
                     timeValues, yValues, 'g-',
                     timeValues, zValues, 'r-')
 
             plt.show(block=False)
-            plt.pause(0.01)  # czas odswiezania wykresu
+            plt.pause(0.000001)  # czas odswiezania wykresu
             toc += time.time() - tic
         saveTestingGesture(dataList)
-        recognizedGesturePath = dtwTest(4)
+        recognizedGesturePath = dtwTest(9)# set distance
         recognizedGestureName = recognizedGesturePath.replace("gestures\\", "")
         recognizedGestureName, fileFormat = recognizedGestureName.split(".")
         uart.closePort()
@@ -309,19 +309,19 @@ def recognizeGesture():
         plt.show(block=False)
 
 
-    uart.openPort("COM3", 9600)  # nazwa portu, predkosc transmisji
+    uart.openPort("COM7", 9600)  # nazwa portu, predkosc transmisji
     plt.style.use('seaborn-bright')
     fig = plt.figure(figsize = (9,7.5))
     ax = fig.add_subplot(211)
     ax.set_ylim(-2, 2)
     ax.set_xlabel("Time (s)")
     ax.set_ylabel("X, Y, Z of Tested Signal")
-    ax.set_xlim(left=0, right=3)
+    ax.set_xlim(left=0, right=2)
     ax2 = fig.add_subplot(212)
     ax2.set_ylim(-2, 2)
     ax2.set_xlabel("Time (s)")
     ax2.set_ylabel("X, Y, Z of Recognized Signal")
-    ax2.set_xlim(left=0, right=3)
+    ax2.set_xlim(left=0, right=2)
     axButtonStart = plt.axes([0.2, 0.90, 0.6, 0.05])
     buttonStart = Button(axButtonStart, "START")
     buttonStart.on_clicked(Start)
